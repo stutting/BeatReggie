@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Matrix Code Rain</title>
+  <title>Matrix Code Rain - Hi Reggie Mode</title>
   <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
     body {
@@ -21,7 +21,6 @@
   <script>
     const canvas = document.getElementById('matrixCanvas');
     const ctx = canvas.getContext('2d');
-
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
@@ -30,28 +29,49 @@
     const drops = Array(columns).fill(1);
     const matrixChars = 'アカサタナハマヤラワ0123456789@#$%&*';
 
-    const message = "Welcome Agent Smith (Reggie Smith)";
-    let messageIndex = 0;
+    const specialWord = "Hi Reggie";
+    const specialDrops = [];
 
     function draw() {
+      // Fade previous frame
       ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      ctx.fillStyle = '#0F0';
       ctx.font = `${fontSize}px 'Share Tech Mono', monospace`;
 
-      // Randomly pick one column to show the message char
-      const messageColumn = Math.floor(Math.random() * columns);
+      // Spawn a random column with "Hi Reggie" every ~15 frames
+      if (Math.random() > 0.93) {
+        const col = Math.floor(Math.random() * columns);
+        specialDrops.push({ col, index: 0 });
+      }
 
-      drops.forEach((y, i) => {
-        let text;
+      // Handle message drops
+      for (let s = specialDrops.length - 1; s >= 0; s--) {
+        const { col, index } = specialDrops[s];
 
-        if (i === messageColumn && messageIndex < message.length) {
-          text = message[messageIndex++];
+        ctx.fillStyle = '#0FF'; // Cyan for "Hi Reggie"
+        ctx.fillText(specialWord[index], col * fontSize, drops[col] * fontSize);
+
+        // Advance to next character or remove once done
+        if (index + 1 >= specialWord.length) {
+          specialDrops.splice(s, 1); // Done
         } else {
-          text = matrixChars[Math.floor(Math.random() * matrixChars.length)];
+          specialDrops[s].index++;
         }
 
+        drops[col]++;
+        if (drops[col] * fontSize > canvas.height) {
+          drops[col] = 0;
+        }
+      }
+
+      // Matrix rain for all other columns
+      for (let i = 0; i < drops.length; i++) {
+        // Skip special message columns
+        if (specialDrops.some(s => s.col === i)) continue;
+
+        ctx.fillStyle = '#0F0';
+        const text = matrixChars[Math.floor(Math.random() * matrixChars.length)];
         ctx.fillText(text, i * fontSize, drops[i] * fontSize);
 
         if (drops[i] * fontSize > canvas.height || Math.random() > 0.975) {
@@ -59,11 +79,6 @@
         } else {
           drops[i]++;
         }
-      });
-
-      // Loop message once complete
-      if (messageIndex >= message.length) {
-        messageIndex = 0;
       }
 
       requestAnimationFrame(draw);
