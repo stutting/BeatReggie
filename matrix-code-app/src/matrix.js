@@ -21,6 +21,7 @@ function draw() {
     ctx.fillText(text, i * fontSize, y * fontSize);
 
     drops[i] = y * fontSize > canvas.height || Math.random() > 0.975 ? 0 : y + 1;
+    main
   });
 
   requestAnimationFrame(draw);
