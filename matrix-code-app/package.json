@@ -1,0 +1,12 @@
+{
+  "name": "matrix-code-app",
+  "version": "1.0.0",
+  "description": "Matrix-style falling code animation in Canvas, served via Node.js and containerized with Docker",
+  "main": "index.js",
+  "scripts": {
+    "start": "npx serve public -l 8080"
+  },
+  "dependencies": {
+    "serve": "^14.0.1"
+  }
+}
