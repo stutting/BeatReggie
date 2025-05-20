@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Matrix Code Rain</title>
   <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
@@ -27,13 +27,11 @@
     const fontSize = 16;
     const columns = Math.floor(canvas.width / fontSize);
     const drops = Array(columns).fill(1);
-
     const matrixChars = 'アカサタナハマヤラワ0123456789@#$%&*';
-    const message = "Welcome Agent Smith (Reggie Smith)";
-    let messageIndex = 0;
 
-    // Choose a column to display the full vertical message
-    const messageColumn = Math.floor(Math.random() * columns);
+    // Convert your message to a queue of characters
+    const message = "Welcome Agent Smith (Reggie Smith)";
+    const messageQueue = message.split(""); // Array of characters
 
     function draw() {
       ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
@@ -45,9 +43,9 @@
       drops.forEach((y, i) => {
         let text;
 
-        // If this is the chosen column and message is still going
-        if (i === messageColumn && messageIndex < message.length) {
-          text = message[messageIndex++];
+        // ~1 in 20 chance to insert message character if any remain
+        if (Math.random() > 0.95 && messageQueue.length > 0) {
+          text = messageQueue.shift(); // remove first character
         } else {
           text = matrixChars[Math.floor(Math.random() * matrixChars.length)];
         }
