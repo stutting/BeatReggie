@@ -1,17 +1,18 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Matrix Code Rain</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
-      background: black;
+      background-color: black;
       overflow: hidden;
     }
     canvas {
       display: block;
+      font-family: 'Share Tech Mono', monospace;
     }
   </style>
 </head>
@@ -21,23 +22,35 @@
     const canvas = document.getElementById('matrixCanvas');
     const ctx = canvas.getContext('2d');
 
+    // Full screen
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
     const fontSize = 16;
     const columns = Math.floor(canvas.width / fontSize);
     const drops = Array(columns).fill(1);
+
     const matrixChars = 'アカサタナハマヤラワ0123456789@#$%&*';
+    const message = "Welcome Agent Smith (Reggie Smith)";
+    let messageIndex = 0;
 
     function draw() {
       ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       ctx.fillStyle = '#0F0';
-      ctx.font = `${fontSize}px monospace`;
+      ctx.font = `${fontSize}px 'Share Tech Mono', monospace`;
 
       drops.forEach((y, i) => {
-        const text = matrixChars[Math.floor(Math.random() * matrixChars.length)];
+        let text;
+
+        // Occasionally insert a message character
+        if (Math.random() > 0.98 && messageIndex < message.length) {
+          text = message[messageIndex++];
+        } else {
+          text = matrixChars[Math.floor(Math.random() * matrixChars.length)];
+        }
+
         ctx.fillText(text, i * fontSize, y * fontSize);
 
         if (y * fontSize > canvas.height || Math.random() > 0.975) {
@@ -52,6 +65,7 @@
 
     draw();
 
+    // Adjust canvas on resize
     window.addEventListener('resize', () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
