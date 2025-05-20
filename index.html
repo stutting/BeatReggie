@@ -27,21 +27,13 @@
     const fontSize = 16;
     const columns = Math.floor(canvas.width / fontSize);
     const drops = Array(columns).fill(1);
-    const matrixChars = '0123456789@#$%&*';
 
+    const matrixChars = 'アカサタナハマヤラワ0123456789@#$%&*';
     const message = "Welcome Agent Smith (Reggie Smith)";
-    const messageMap = {}; // column -> message character
+    let messageIndex = 0;
 
-    // Assign each message character to a random column
-    const usedCols = new Set();
-    for (let i = 0; i < message.length; i++) {
-      let col;
-      do {
-        col = Math.floor(Math.random() * columns);
-      } while (usedCols.has(col));
-      usedCols.add(col);
-      messageMap[col] = message[i];
-    }
+    // Choose a column to display the full vertical message
+    const messageColumn = Math.floor(Math.random() * columns);
 
     function draw() {
       ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
@@ -53,9 +45,9 @@
       drops.forEach((y, i) => {
         let text;
 
-        // Inject message character if this column is mapped
-        if (messageMap[i]) {
-          text = messageMap[i];
+        // If this is the chosen column and message is still going
+        if (i === messageColumn && messageIndex < message.length) {
+          text = message[messageIndex++];
         } else {
           text = matrixChars[Math.floor(Math.random() * matrixChars.length)];
         }
