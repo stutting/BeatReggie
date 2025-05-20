@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Matrix Code Rain</title>
   <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
@@ -21,20 +21,17 @@
   <script>
     const canvas = document.getElementById('matrixCanvas');
     const ctx = canvas.getContext('2d');
+
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
     const fontSize = 16;
     const columns = Math.floor(canvas.width / fontSize);
     const drops = Array(columns).fill(1);
-
     const matrixChars = 'アカサタナハマヤラワ0123456789@#$%&*';
 
     const message = "Welcome Agent Smith (Reggie Smith)";
     let messageIndex = 0;
-
-    // Choose one random column to display the full message
-    const messageColumn = Math.floor(Math.random() * columns);
 
     function draw() {
       ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
@@ -43,10 +40,12 @@
       ctx.fillStyle = '#0F0';
       ctx.font = `${fontSize}px 'Share Tech Mono', monospace`;
 
+      // Randomly pick one column to show the message char
+      const messageColumn = Math.floor(Math.random() * columns);
+
       drops.forEach((y, i) => {
         let text;
 
-        // If this is the message column, print one message char per frame
         if (i === messageColumn && messageIndex < message.length) {
           text = message[messageIndex++];
         } else {
@@ -57,14 +56,15 @@
 
         if (drops[i] * fontSize > canvas.height || Math.random() > 0.975) {
           drops[i] = 0;
-          // Optional: Reset message when full scroll completes
-          if (i === messageColumn && messageIndex >= message.length) {
-            messageIndex = 0;
-          }
         } else {
           drops[i]++;
         }
       });
+
+      // Loop message once complete
+      if (messageIndex >= message.length) {
+        messageIndex = 0;
+      }
 
       requestAnimationFrame(draw);
     }
