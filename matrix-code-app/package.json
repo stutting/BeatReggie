@@ -1,0 +1,11 @@
+{
+  "name": "matrix-code-app",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "npx serve public -l 8080"
+  },
+  "dependencies": {
+    "serve": "^14.0.1"
+  }
+}
